@@ -1,16 +1,35 @@
 setwd("~/desktop") 
 
 library(seqinr)
-enterodata<-read.fasta("enterodata.txt")
+library(ape)
+
+enteroseqs<-read.fasta("enteroAli.txt")
+enteromatrix<-read.dna("enteroAli.txt", format="fasta", as.character = TRUE)
+
+cons<-consensus(enteromatrix)
+
+cons->enterodata[,2]
+numCons<-length(which(enteromatrix[,1]==cons[1]))
+
+transition<-function(basepair){
+  #basepair<-("A", "C", "T", "G"),
+  if(basepair=="A") {return("G")}
+  if(basepair=="G") {return ("A")}
+  if(basepair=="T") {return ("C")}
+  if(basepair=="C") {return ("T")}}
+
+numTrans<-length(which(enteromatrix[1]=="transition"))
+
+numTrans
 
 #creates an new variable to make an empty data frame with 891 rows
-num<-c(1:891)
+num<-c(1:864)
 
 #creates the data frame with 891 rows 
 enterodata<-data.frame(num)
 
 #creates 2 new columns 
-enterodata$WtNT="element1"
+enterodata$WtNT=""
 enterodata$freq=""
 
 
@@ -34,20 +53,7 @@ substr(enterodata[1], 4, 4)
 table(substr(enterodata, 4, 4))
 table(substr(enterodata, 9, 9))
 
-#creates a for loop
-loop1<-c()
-for(i in 1:1782)
-  {
-  table(substr(
-    enterodata[i])->nucs,
-    loop1<-c(loop1,nucs))
-  }
 
-#We are currently working on a for loop to go through all the elements in 
-#our first fasta file to find what the wild NT is. 
-#We’re still working on how to do this for the first 
-#2 elements successfully so that we can apply it to 
-#the rest of the elements in the data frame.  
 
 
 
