@@ -43,7 +43,11 @@ for(i in 1:1782)
     loop1<-c(loop1,nucs))
   }
 
-
+#We are currently working on a for loop to go through all the elements in 
+#our first fasta file to find what the wild NT is. 
+#We’re still working on how to do this for the first 
+#2 elements successfully so that we can apply it to 
+#the rest of the elements in the data frame.  
 
 
 
