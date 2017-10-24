@@ -3,55 +3,66 @@ setwd("~/desktop")
 library(seqinr)
 library(ape)
 
-enteroseqs<-read.fasta("enteroAli.txt")
-enteromatrix<-read.dna("enteroAli.txt", format="fasta", as.character = TRUE)
+enteroseqs<-read.fasta("enteroshort.txt")
+ealigned<-read.alignment("enteroshort.txt", format="fasta")
 
-cons<-consensus(enteromatrix)
+#gets DNA into matrix form
+enteromatrix<-read.dna("enterodata.txt", format="fasta", as.character = TRUE)
 
-cons->enterodata[,2]
-numCons<-length(which(enteromatrix[,1]==cons[1]))
+#gets WT NT for each DNA position 
+cons<-seqinr::consensus(ealigned)
+
+#counts number of sequences with consensus NT
+numCons<-length(which(enteromatrix[]==cons[]))
 
 transition<-function(basepair){
   #basepair<-("A", "C", "T", "G"),
-  if(basepair=="A") {return("G")}
-  if(basepair=="G") {return ("A")}
-  if(basepair=="T") {return ("C")}
-  if(basepair=="C") {return ("T")}}
+  if(basepair=="a") {return("g")}
+  if(basepair=="g") {return ("a")}
+  if(basepair=="t") {return ("c")}
+  if(basepair=="c") {return ("t")}
+  }
 
-numTrans<-length(which(enteromatrix[1]=="transition"))
+nrow(enterodata)
+ncol(enterodata)
 
-numTrans
+#determines transition from consensus
+numTrans<-length(which(enteromatrix=="transition"))
+
+transAA<-c()
+for(i in 1:length(cons)){
+  trans_letter<-transition(cons[i])
+  transAA<-c(transAA,trans_letter)
+}
+
+mutatedAA<-translate(transAA)
+
+#factor code 
+bigAAchange=factor(c(), levels=c(0,1), labels=c())
 
 #creates an new variable to make an empty data frame with 891 rows
-num<-c(1:864)
+num<-c(1:891)
 
 #creates the data frame with 891 rows 
 enterodata<-data.frame(num)
 
 #creates 2 new columns 
 enterodata$WtNT=""
-enterodata$freq=""
+enterodata$WTAA=""
+enterodata$MutAA=""
+enterodata$bigAAchange=""
 
+#puts WTNT in first 5 elements in row 2
+cons->enterodata[,2]
+WTAA->enterodata[,3]
+mutatedAA->enterodata[,4]
 
-#all elements are 891 in length
-element1<-enterodata[[1]]
-element1[1]
+WTAA<-translate(cons)
 
 View(enterodata)
 
-##Substr is a way to look at any range of positions of an element. This first line calls
-# for the first position of the first element. However, "c" should not be the first
-# position here (look at position 2 and 3 too). The first real nuc isn't shown until
-# position 4. This is something that will need to be fixed to properly call nucs
-substr(enterodata[1], 1, 1)
-substr(enterodata[1], 2, 2)
-substr(enterodata[1], 3, 3)
-substr(enterodata[1], 4, 4)
 
-##Table allows us to see the distribution of possibilities at a position in all of the
-# elements. Positons 4 & 9 are the first and second nucletide positons. Most frequent!
-table(substr(enterodata, 4, 4))
-table(substr(enterodata, 9, 9))
+
 
 
 
