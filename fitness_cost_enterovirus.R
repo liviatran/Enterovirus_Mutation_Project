@@ -22,20 +22,30 @@ Enterovirus$freq = ""
 # for the first position of the first element. However, "c" should not be the first
 # position here (look at position 2 and 3 too). The first real nuc isn't shown until
 # position 4. This is something that will need to be fixed to properly call nucs
-substr(enterovirus_data[1], 1, 1)
+substr(enterovirus_data[1], 1, 30)
 substr(enterovirus_data[1], 2, 2)
 substr(enterovirus_data[1], 3, 3)
-substr(enterovirus_data[1], 4, 4)
+substr(enterovirus_data[1], 14, 14)
 
 ##Table allows us to see the distribution of possibiltes at a position in all of the
 # elements. Positons 4 & 9 are the first and second nucletide positons. Most frequent!
 table(substr(enterovirus_data, 4, 4))
 table(substr(enterovirus_data, 9, 9))
+table(substr(enterovirus_data, 14, 14))
 
 ##If you select a range from the first position to 20 for example, you'll see where the
 # problem is coming from. the c() function, paranthesis, and quotes are being included
 # in the positions.
 substr(enterovirus_data[1], 1, 20)
+
+nucleos<-c()
+for(i in 1:10){
+  NNs<-EVD[i]
+  nucleos<-c(nucleos,NNs)
+}
+
+enterovirus_data[[1]]->EVD
+EVD[1:891]
 
 ##...
 
