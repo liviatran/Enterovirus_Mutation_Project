@@ -1,20 +1,30 @@
-setwd("~/desktop") 
+PracticeData<-read.csv("OverviewSelCoeff_BachelerFilter.csv")
 
 library(seqinr)
 library(ape)
 
+#First we'll start the data frame
+Pos<-c(1:891)
+EnteroData<-data.frame(Pos)
+EnteroData$WtNt=""
+EnteroData$TrNtFreq=""
+
+#Read in shortened entero data
 enteroseqs<-read.fasta("enteroshort.txt")
-ealigned<-read.alignment("enteroshort.txt", format="fasta")
 
-#gets DNA into matrix form
-enteromatrix<-read.dna("enterodata.txt", format="fasta", as.character = TRUE)
+#Align entero data
+enteroaligned<-read.alignment("enteroshort.txt", format="fasta")
 
-#gets WT NT for each DNA position 
-cons<-seqinr::consensus(ealigned)
+#Gets DNA into matrix form
+enteromatrix<-read.dna("enteroshort.txt", format="fasta", as.character = TRUE)
 
-#counts number of sequences with consensus NT
-numCons<-length(which(enteromatrix[]==cons[]))
+#Gets WTnt for each nt position
+cons<-seqinr::consensus(enteroaligned)
 
+#Insert concensus nt into dataframe
+EnteroData$WtNt=cons
+
+#Function to return transition mutation
 transition<-function(basepair){
   #basepair<-("A", "C", "T", "G"),
   if(basepair=="a") {return("g")}
@@ -23,28 +33,24 @@ transition<-function(basepair){
   if(basepair=="c") {return ("t")}
   }
 
-nrow(enterodata)
-ncol(enterodata)
-
-#determines transition from consensus
-numTrans<-length(which(enteromatrix=="transition"))
-
+#Loop to insert freq of Transition mutations
+for(i in 1:nrow(EnteroData)){
+  EnteroData$TrNtFreq[i]<-length(which(enteromatrix[,i]==transition(cons[i])))/
+    (nrow(enteromatrix))
+}
+  
+#Loop to 
 transAA<-c()
 for(i in 1:length(cons)){
   trans_letter<-transition(cons[i])
   transAA<-c(transAA,trans_letter)
 }
 
+#
 mutatedAA<-translate(transAA)
 
 #factor code 
 bigAAchange=factor(c(), levels=c(0,1), labels=c())
-
-#creates an new variable to make an empty data frame with 891 rows
-num<-c(1:891)
-
-#creates the data frame with 891 rows 
-enterodata<-data.frame(num)
 
 #creates 2 new columns 
 enterodata$WtNT=""
@@ -60,21 +66,3 @@ mutatedAA->enterodata[,4]
 WTAA<-translate(cons)
 
 View(enterodata)
-
-
-
-
-
-
-
-
-
-  
-
-
-
-
-
-
-
-
