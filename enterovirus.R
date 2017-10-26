@@ -58,18 +58,13 @@ for(i in 1:length(wildAA)) {
   enterodata[count,]$WTAA=wildAA[i]
   }
 
-#Gives the mutated AA for each transition mutation
-enterodata$MUTAA[1]=translate(c(transition(enterodata$WtNt[1]), enterodata$WtNt[2], enterodata$WtNt[3]))
-enterodata$MUTAA[2]=translate(c(enterodata$WtNt[1], transition(enterodata$WtNt[2]), enterodata$WtNt[3]))
-enterodata$MUTAA[3]=translate(c(enterodata$WtNt[1], enterodata$WtNt[2], transition(enterodata$WtNt[3])))
-
 #This is the loop but it doesn't run through all the data
 for(i in seq(1,891,3)){
   enterodata$MUTAA[i]=translate(c(transition(enterodata$WtNt[i]), enterodata$WtNt[i+1], enterodata$WtNt[i+2]))
   enterodata$MUTAA[i+1]=translate(c(enterodata$WtNt[i], transition(enterodata$WtNt[i+1]), enterodata$WtNt[i+2]))
   enterodata$MUTAA[i+2]=translate(c(enterodata$WtNt[i], enterodata$WtNt[i+1], transition(enterodata$WtNt[i+2])))
   }
-
+  
 #Amino Acid Changes 
 pos <- "R|H|K"
 neg <- "D|E"
@@ -104,3 +99,4 @@ for(i in 1:nrow(enterodata)){
     enterodata$bigAAchange[i] = "1"
   }
 }
+
