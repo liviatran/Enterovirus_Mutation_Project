@@ -56,5 +56,41 @@ for(i in 1:length(wildAA)) {
   enterodata[count,]$WTAA=wildAA[i]
   }
 
-?regexpr
+#Gives the mutated AA for each transition mutation
+enterodata$MUTAA[1]=translate(c(transition(enterodata$WtNt[1]), enterodata$WtNt[2], enterodata$WtNt[3]))
+enterodata$MUTAA[2]=translate(c(enterodata$WtNt[1], transition(enterodata$WtNt[2]), enterodata$WtNt[3]))
+enterodata$MUTAA[3]=translate(c(enterodata$WtNt[1], enterodata$WtNt[2], transition(enterodata$WtNt[3])))
 
+#This is the loop but it doesn't run through all the data
+for(i in seq(1,891,3)){
+  if(!is.na(enterodata$WtNt[i])){
+  enterodata$MUTAA[i]=translate(c(transition(enterodata$WtNt[i]), enterodata$WtNt[i+1], enterodata$WtNt[i+2]))
+  enterodata$MUTAA[i+1]=translate(c(enterodata$WtNt[i], transition(enterodata$WtNt[i+1]), enterodata$WtNt[i+2]))
+  enterodata$MUTAA[i+2]=translate(c(enterodata$WtNt[i], enterodata$WtNt[i+1], transition(enterodata$WtNt[i+2])))
+  }
+}
+
+#Amino Acid Changes 
+pos <- "R|H|K"
+neg <- "D|E"
+unc <- "S|T|N|Q"
+spe <- "C|U|G|P"
+hyd <- "A|I|L|F|M|W|Y|V"
+amCat <- function(AA){
+  if(regexpr(pos, AA) > 0){ return(0) }
+  if(regexpr(neg, AA) > 0){ return(1) }
+  if(regexpr(unc, AA) > 0){ return(2) }
+  if(regexpr(spe, AA) > 0){ return(3) }
+  if(regexpr(hyd, AA) > 0){ return(4) }
+  return(5)
+}
+
+#for loop for drastic change or not 
+for(i in 1:length(c(enterodata$WTAA, enterodata$MUTAA))){
+  if (enterodata$WTAA==enterodata$MUTAA){
+    enterodata$bigAAchange= "0"
+  }
+  if (enterodata$WTAA!=enterodata$MUTAA){
+    enterodata$bigAAchange = "1"
+  }
+}
