@@ -48,6 +48,7 @@ for(i in 1:length(cons)){
 
 #
 mutatedAA<-translate(transAA)
+mutatedAA
 
 #factor code 
 bigAAchange=factor(c(), levels=c(0,1), labels=c())
@@ -63,6 +64,19 @@ cons->enterodata[,2]
 WTAA->enterodata[,3]
 mutatedAA->enterodata[,4]
 
-WTAA<-translate(cons)
+translate(cons) -> wildAA
+
+count=0
+for(i in 1:length(wildAA)) {
+  count= count+1
+  enterodata[count,]$WTAA=wildAA[i]
+  count=count+1
+  enterodata[count,]$WTAA=wildAA[i]
+  count=count+1
+  enterodata[count,]$WTAA=wildAA[i]
+  }
+  
+  
+
 
 View(enterodata)
