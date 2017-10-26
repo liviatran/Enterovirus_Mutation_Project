@@ -56,6 +56,5 @@ for(i in 1:length(wildAA)) {
   enterodata[count,]$WTAA=wildAA[i]
   }
 
-
-
+?regexpr
 
