@@ -10,6 +10,8 @@ enterodata$WtNt=""
 enterodata$TrNtFreq=""
 enterodata$WTAA=""
 enterodata$MUTAA=""
+enterodata$WTAAcat=""
+enterodata$MUTAAcat=""
 enterodata$bigAAchange=""
 
 #Read in shortened entero data
@@ -63,12 +65,10 @@ enterodata$MUTAA[3]=translate(c(enterodata$WtNt[1], enterodata$WtNt[2], transiti
 
 #This is the loop but it doesn't run through all the data
 for(i in seq(1,891,3)){
-  if(!is.na(enterodata$WtNt[i])){
   enterodata$MUTAA[i]=translate(c(transition(enterodata$WtNt[i]), enterodata$WtNt[i+1], enterodata$WtNt[i+2]))
   enterodata$MUTAA[i+1]=translate(c(enterodata$WtNt[i], transition(enterodata$WtNt[i+1]), enterodata$WtNt[i+2]))
   enterodata$MUTAA[i+2]=translate(c(enterodata$WtNt[i], enterodata$WtNt[i+1], transition(enterodata$WtNt[i+2])))
   }
-}
 
 #Amino Acid Changes 
 pos <- "R|H|K"
@@ -85,12 +85,22 @@ amCat <- function(AA){
   return(5)
 }
 
-#for loop for drastic change or not 
-for(i in 1:length(c(enterodata$WTAA, enterodata$MUTAA))){
-  if (enterodata$WTAA==enterodata$MUTAA){
-    enterodata$bigAAchange= "0"
+#Assign wild type AA category
+for(i in 1:nrow(enterodata)){
+  enterodata$WTAAcat[j]=amCat(enterodata$WTAA[j])
+}
+
+#Assign mutated AA category
+for(i in 1:nrow(enterodata)){
+  enterodata$MUTAAcat[j]=amCat(enterodata$MUTAA[j])
+}
+
+#Loop for drastic change or not 
+for(i in 1:nrow(enterodata)){
+  if (enterodata$WTAAcat[i]==enterodata$MUTAAcat[i]){
+    enterodata$bigAAchange[i]= "0"
   }
-  if (enterodata$WTAA!=enterodata$MUTAA){
-    enterodata$bigAAchange = "1"
+  if (enterodata$WTAAcat[i]!=enterodata$MUTAAcat[i]){
+    enterodata$bigAAchange[i] = "1"
   }
 }
